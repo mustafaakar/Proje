@@ -1,0 +1,339 @@
+//----------MUSTAFA AKAR 141602001
+#include<stdio.h>
+#include<stdlib.h>
+#include<conio.h>
+#include<time.h>
+#include<locale.h>
+
+#define boyut1 20  // Cukur oyunu için gerekli elemanların boyutu
+#define boyut 15	//Sıcak patates için gerekli dizinin boyutu
+
+//cukur oyunu baslangıvı
+
+struct cukur{
+	int dizi1[boyut1];
+	int son;
+	int bas;
+	int sayilar;
+	struct cukur *sonraki;
+	
+};
+
+int kisileridoldur(struct cukur *eleman){
+	eleman->bas=0;
+	int i,t=1;
+	for(i=0; i<=19; i++){
+		eleman->dizi1[i]=t;
+		t++;
+		eleman->son++;
+	//	printf("\n11--%d",eleman->dizi1[i]);
+		
+	}
+
+	/*for(i=eleman->bas; i<=eleman->son; i++){
+		printf("\n11--%d",eleman->dizi1[i]);
+		
+	}*/
+	
+}
+
+struct cukur *ekle(struct cukur *ilkeleman,int gelensayi){
+      
+       
+       if(ilkeleman==NULL){
+       
+                          ilkeleman=(struct cukur*)(malloc(sizeof(struct cukur)));
+                          ilkeleman->sayilar=gelensayi;
+                          
+                          ilkeleman->sonraki=NULL;
+                          }
+       else{
+                       struct cukur *sondugum;
+                       sondugum=ilkeleman;
+                       
+                       while(sondugum->sonraki !=NULL){
+                                               sondugum=sondugum->sonraki;
+                               
+                               }
+                       struct cukur *ekleneceknokta;
+                       ekleneceknokta=(struct cukur*)(malloc(sizeof(struct cukur)));
+                       ekleneceknokta->sonraki=NULL;                        
+                       ekleneceknokta->sayilar=gelensayi;
+                       sondugum->sonraki=ekleneceknokta;
+       }
+       return ilkeleman;
+	
+	
+}
+
+void cukuragit(struct cukur *oyun,int derinlik,int artis){
+	
+	int i=0,t=20,ilk=0,j=0;
+	//printf("\nDERİNİLK=%d\n",derinlik);
+	
+	for(i=0; i<derinlik; i++)
+	{
+			//printf("\niiiii--=%d",i);
+			t--;
+			
+			ilk=0;
+			ilk=oyun->dizi1[0];
+			
+				for(j=0; j<19; j++)
+				
+				{
+					if(j==t)
+					{
+						break;
+					}
+					oyun->dizi1[j]=oyun->dizi1[j+1];
+					//printf("\n--[%d] elelma=%d",j,oyun->dizi1[j]);	
+				
+				}
+			//printf("\nilk---%d",ilk);
+			
+			oyun->dizi1[t]=ilk;
+			/*printf("\n--[%d] oyunaeklemenen==%d",t,oyun->dizi1[t]);
+			printf("\nttttteleman===%d",t);*/
+				
+			
+	}
+	
+	if(artis%100==0)
+	{
+		int bolen=artis/100;
+		printf("\n\n[%d].CUKURA GİRİS:\n",artis);
+		int k=0;
+		
+		for(k=0; k<oyun->son; k++)
+			{
+				
+			printf("\t%d",oyun->dizi1[k]);
+				
+			}
+	}
+}
+
+FILE *dosya; //TXT dosyası açıldı
+
+int oyunabaslayin(){
+	
+	system("cls");
+	
+	dosya = fopen("cukur.txt","r");
+	
+	struct cukur *ilkeleman;
+	ilkeleman=NULL;
+
+   	int a;   
+   
+   	while(!feof(dosya))
+   	{
+   
+	   	fscanf(dosya,"%d",&a);
+	   	ilkeleman=ekle(ilkeleman,a);
+	   
+	
+	}
+	
+	struct cukur *gecici;
+	gecici=ilkeleman;
+	
+	int i=0;
+	
+	struct cukur dolumagidecek;
+    kisileridoldur(&dolumagidecek);
+	
+	
+	while(1)
+	{//ekrana yazdırma
+		i++;
+		
+		cukuragit(&dolumagidecek,gecici->sayilar,i);
+			
+		if(gecici->sonraki==NULL) break;
+		
+		else
+		{
+			gecici=gecici->sonraki;
+			
+		}
+	}
+	
+	
+	int ana;
+	printf("\n\nAna Menüye Dönmek İçin 1'e Basın:");
+	scanf("%d",&ana);
+	if(ana==1){
+	}
+	
+
+}
+//cukur oyunu bitissssssssss
+
+//SICAK APATATESSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+
+
+struct kuyruk{
+	
+	int dizi1[boyut];
+	int son;
+	int bas;
+	
+};
+void doldur(struct kuyruk *a){
+	
+	int i=0;
+	
+	printf("\n\n\t         ---OYUN BASLANGICINDAKİ OYUNCU SIRALARI--\n\n");
+	
+	for(i=0; i<15; i++)
+	{
+		a->dizi1[i]=i+1;
+		printf("   ---%d.Oyuncu",a->dizi1[i]);
+		a->son++;
+	}
+
+}
+
+int oyunabasla(struct kuyruk *a){
+	
+	int calmasuresi,i=0,elindetutma,z=0;
+	srand(time(NULL));
+	
+    while(1)
+	{
+		z++;
+	    printf("\n\n\t\t\t    ---[%d].TUR BASLIYOR\n",z);
+		
+		calmasuresi=10+rand()%16;
+		int toplamsure=0;
+		int t=1;
+		
+		printf("\n\t\t****---[%d].turda CALMA SURESI= %d saniye\n",z,calmasuresi);
+		
+		while(1)
+		{
+			elindetutma=0;
+			
+			elindetutma=1+rand()%3;
+		                      //Oyuncuların bekleme süreleri
+			toplamsure=toplamsure+elindetutma;
+			
+			
+		
+			t++;
+			
+			if(toplamsure<calmasuresi)
+			{
+				
+				int sayilar=a->dizi1[0];
+				//printf("---asd %d",a->son);
+				
+				printf("\n\n\t [%d].Oyuncunun Elinde Tutma Suresi = %d saniye idi --- Toplam Sure = %d saniye\n\n",sayilar,elindetutma,toplamsure);
+				//printf("\nson sayi===%d",sayilar);
+				for(i=0; i<a->son-1; i++)					//Eglencenin gercekleştiği yer
+				{									
+						
+				a->dizi1[i]=a->dizi1[i+1];
+				printf("    %d.Oyuncu    ",a->dizi1[i]);
+						
+				}
+				
+				a->dizi1[a->son-1]=sayilar;
+					printf("    %d.Oyuncu   ",a->dizi1[a->son-1]);	
+					Sleep(elindetutma*1000);   
+		  	}
+			
+			else
+			{
+				
+				printf("\n\n\t\t------ [%d].turda Elenen Oyuncu = %d.OYUNCU ------ Elinde tutma süresi =%d saniye ve müzik kapandı ve yandı ",z,a->dizi1[0],elindetutma);
+				
+				for(i=0; i<a->son; i++)
+				{									//Elenen Oyuncu Oyunda cıkartılıyor
+					a->dizi1[i]=a->dizi1[i+1];
+					//printf("\n[%d]alooo11--%d---",i,a->dizi1[i]);
+				}
+				
+				a->son--;
+				printf("\n");
+				
+				printf("\n\n\t\t[%d].turun Sonunda Oyuncu Listesinin Son Hali",z);
+				
+				for(i=0; i<a->son; i++)
+				{	
+					printf("\n\t\t-- [%d] İndiste -- %d.Oyuncu---",i,a->dizi1[i]);
+				}
+				//printf("\n");
+			
+				break;
+			}
+	
+		
+		}
+		
+		if(a->son==1)
+		{
+		printf("\n\n\t  -----KAZANAN OYUNCU=%d.OYUNCU TEBRIK EDIYORUZ-----\n\n",a->dizi1[0]);break;
+		}
+		
+		
+	}
+	
+	int ana;
+	printf("\n\nAna Menüye Dönmek İçin 1'e Basın:");
+	scanf("%d",&ana);
+	if(ana==1){
+	}
+
+}
+
+
+int sicakpatates(){
+	system("cls");
+		struct kuyruk a;
+		doldur(&a);
+		oyunabasla(&a);
+	
+}
+
+		///ANA MENUUUUUUUUUUUUUU
+		
+int main(){
+	
+	system("color A");
+	int secim;
+	setlocale(LC_ALL,"Turkish");//türkçe karakter destegi
+	while(1)
+	{
+			system("cls");
+	
+			printf("\n 1-Cukur Oyunu");
+			printf("\n 2-Sıcak Patates");
+			printf("\n 3-Cıkıs");
+			printf("\nSeçiminiz:");
+			
+			scanf("%d",&secim);
+			
+			if(secim==1)
+			{
+				oyunabaslayin();
+			}
+			
+			if(secim==2)
+			{
+				sicakpatates();
+			}
+			
+			if(secim==3)
+			{
+				exit(1);
+			}
+	}
+	
+	
+	return 0;
+	system("PAUSE");
+	
+	}
